@@ -1,0 +1,21 @@
+.sign-in {
+    width: 1100px;
+    display: flex;
+    flex-direction: column;
+    padding-left: 35%;
+    
+    .buttons {
+        display: flex;
+        justify-content: space-between;
+    }
+
+    .sign-up{
+       color: royalblue;
+       display: flex;
+       padding-top: 10%;
+       padding-left: 0%;
+       font-size: larger;
+    }
+
+}
+
