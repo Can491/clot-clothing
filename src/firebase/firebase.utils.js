@@ -58,6 +58,15 @@ export const createUserProfileDocument = async (userAuth, additionalData) => {
     }
 }
 
+export const checkUser = () => {
+    return new Promise((resolve,reject) => {
+        const unsubscribe = auth.onAuthStateChanged(userAuth => {
+            unsubscribe();
+            resolve(userAuth)
+        },reject)
+    })
+}
+
 
 
 
@@ -90,8 +99,8 @@ export const ConvertDataTypeFromArrayToObject = collections => {
 }
 
 
-const provider = new firebase.auth.GoogleAuthProvider(); //access to googleAuthProvider from auth library
-provider.setCustomParameters({ prompt: 'select_account' }) //设置provider的参数，当使用google登录时弹出google登录的对话框
-export const signInWithGoogle = () => auth.signInWithPopup(provider) //这就是我们使用google登录时需要的方法，使用时直接引入至onClick方法
+export const googleProvider = new firebase.auth.GoogleAuthProvider(); //access to googleAuthProvider from auth library
+googleProvider.setCustomParameters({ prompt: 'select_account' }) //设置provider的参数，当使用google登录时弹出google登录的对话框
+export const signInWithGoogle = () => auth.signInWithPopup(googleProvider) //这就是我们使用google登录时需要的方法，使用时直接引入至onClick方法
 
 export default firebase;

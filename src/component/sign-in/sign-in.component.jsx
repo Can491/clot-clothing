@@ -4,9 +4,13 @@ import { FormInput } from "../form-input/form-input.component";
 
 import { CustomeButton } from "../custome-button/custome-button.component";
 
-import { auth, signInWithGoogle } from "../../firebase/firebase.utils";
+//import { auth } from "../../firebase/firebase.utils";
 
 import { Link } from "react-router-dom";
+
+import { connect } from "react-redux";
+
+import { googleSignInStart, emailSignInStart} from "../../redux/user/user.actions";
 
 
 import './sign-in.styles.scss';
@@ -25,13 +29,15 @@ class SignIn extends React.Component {
     handleSubmit = async event => {
         event.preventDefault();
         const { email, password } = this.state;
-        try {
-            await auth.signInWithEmailAndPassword(email, password); //注意这是一个异步方法
+        // try {
+        //     await auth.signInWithEmailAndPassword(email, password); //注意这是一个异步方法
 
-        } catch (error) {
-            alert(error.message)
-            console.log(error.message);
-        }
+        // } catch (error) {
+        //     alert(error.message)
+        //     console.log(error.message);
+        // }
+        const {emailSignIn} = this.props;
+        emailSignIn(email,password);
         this.setState({ email: '', password: '' })
     }
 
@@ -51,6 +57,7 @@ class SignIn extends React.Component {
     //当使用了arrow function,就可以在render中使用this关键词，而不用binding
     //type为submit的input标签，value值为显示出来的值
     render() {
+        const {googleSignIn} = this.props;
         return (
             <div className='sign-in'>
                 <h1>I already have an account</h1>
@@ -60,7 +67,7 @@ class SignIn extends React.Component {
                     <FormInput name="password" value={this.state.password} onChange={this.handleChange} type='password' label='Password' required />
                     <div className="buttons">
                         <CustomeButton type="submit">SIGN IN</CustomeButton>
-                        <CustomeButton type='button' onClick={signInWithGoogle} isSignInWithGoogle>SIGN IN With GOOGLE</CustomeButton>
+                        <CustomeButton type='button' onClick={googleSignIn} isSignInWithGoogle>SIGN IN With GOOGLE</CustomeButton>
                     </div>
                 </form>
                 <Link to="./signup" className='sign-up'>Without account? click here to sign up</Link>
@@ -69,4 +76,9 @@ class SignIn extends React.Component {
     }
 }
 
-export default SignIn;
+const mapDispatchToProps = dispatch => ({
+    googleSignIn: () => dispatch(googleSignInStart()),
+    emailSignIn: (email,password) => dispatch(emailSignInStart({email,password}))
+})
+
+export default connect(null,mapDispatchToProps)(SignIn);

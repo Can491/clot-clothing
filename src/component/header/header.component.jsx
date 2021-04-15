@@ -12,8 +12,10 @@ import { selectHidden } from "../../redux/cart/cart-selector";
 
 import { selectCurrentUser } from "../../redux/user/user.selector";
 
-import { auth } from "../../firebase/firebase.utils";
+//import { auth } from "../../firebase/firebase.utils";
 //在这里引入auth library，因为我们需要使用auth.signout功能来实现登出
+
+import { signOutStart } from "../../redux/user/user.actions";
 
 import { ReactComponent as Logo } from "../../assets/crown.svg";
 //这是一种引用svg文件的特殊格式
@@ -21,7 +23,7 @@ import { ReactComponent as Logo } from "../../assets/crown.svg";
 import { connect } from "react-redux"; //connect是一个higher order component,有了它就可以access reducer相关的数据和action
 
 //<Logo>有专门logo标签，这是一个不需要</Logo>的自我封闭标签,Link才有to这个属性，不能直接放在Logo标签里
-const Header = ({ currentUser, hidden }) => ( //这里currentUser的值已经是来源于userReducer了，action部分放在app.js里set currentUser在里面
+const Header = ({ currentUser, hidden,signOut }) => ( //这里currentUser的值已经是来源于userReducer了，action部分放在app.js里set currentUser在里面
     <HeaderContainer>
         <LogoContainer to='/'>
             <Logo className='logo' />
@@ -31,7 +33,7 @@ const Header = ({ currentUser, hidden }) => ( //这里currentUser的值已经是
             <OptionLink to='/contact'>CONTACT</OptionLink>
             {
                 currentUser ?
-                    <OptionLink as='div' onClick={() => auth.signOut()}>SIGN OUT</OptionLink> :
+                    <OptionLink as='div' onClick={() => signOut()}>SIGN OUT</OptionLink> :
                     <OptionLink to='/signin'>SIGN IN</OptionLink>
             }
             <CartIcon />
@@ -55,4 +57,8 @@ const mapStateToProps = createStructuredSelector({
     hidden: selectHidden
 })
 
-export default connect(mapStateToProps)(Header);
+const mapDispatchToProps = dispatch => ({
+    signOut: () => dispatch(signOutStart())
+})
+
+export default connect(mapStateToProps,mapDispatchToProps)(Header);

@@ -32,5 +32,5 @@ export const selectIsFetching = createSelector(
 
 export const selectIsCollection = createSelector(
     [selectShop],
-    shop => !!shop.collections
+    shop => !!shop.collections  //return the boolean value here
 )

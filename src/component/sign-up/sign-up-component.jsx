@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
+//import { auth, createUserProfileDocument } from "../../firebase/firebase.utils";
 
 import { FormInput } from "../form-input/form-input.component";
 
@@ -9,6 +9,10 @@ import { CustomeButton } from "../custome-button/custome-button.component";
 import { withRouter } from "react-router-dom";
 
 import './sign-up.styles.scss';
+
+import { signUpStart } from "../../redux/user/user.actions";
+
+import { connect } from "react-redux";
 
 class SignUp extends React.Component {
     constructor(props) {
@@ -28,15 +32,17 @@ class SignUp extends React.Component {
     handleSubmit = async event => {
         event.preventDefault();
         const { displayName, email, password, confirmedPassword } = this.state;
+        const { signUp } = this.props;
         if (!(password === confirmedPassword)) { //先验证密码是否相符合
             alert('password and confirmedPassword do not match')
             return;  //不符合到此处即停止
         } else {
             try {
-                const { user } = await auth.createUserWithEmailAndPassword(email, password); //异步方法返回一个firebase.auth object,从此处开始app.js里的onauthStateChange已经监听到一个userAuth
-                console.log('test');
-                console.log(user); //auth.user这个object中缺少关于displayName的信息，需要自己添加
-                await createUserProfileDocument(user, { displayName });
+                // const { user } = await auth.createUserWithEmailAndPassword(email, password); //异步方法返回一个firebase.auth object,从此处开始app.js里的onauthStateChange已经监听到一个userAuth
+                // console.log('test');
+                // console.log(user); //auth.user这个object中缺少关于displayName的信息，需要自己添加
+                // await createUserProfileDocument(user, { displayName });
+                signUp(email,password,displayName);
                 this.setState({
                     displayName: '',  //清空input
                     email: '',
@@ -85,4 +91,8 @@ class SignUp extends React.Component {
     }
 }
 
-export default withRouter(SignUp);
+const mapDispatchToProps = dispatch => ({
+    signUp: (email,password,displayName) => dispatch(signUpStart({email,password,displayName}))
+})
+
+export default connect(null,mapDispatchToProps)(withRouter(SignUp));
